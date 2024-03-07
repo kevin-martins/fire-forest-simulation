@@ -16,7 +16,8 @@ const initialState: InitialState = {
     coordinates: [],
     temperature: 20 ,
     humidity: 0,
-    state: TerrainState.None
+    state: TerrainState.None,
+    burningDuration: 1
   }
 };
 

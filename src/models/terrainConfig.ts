@@ -3,6 +3,7 @@ export type TerrainConfigProps = {
   temperature: number
   humidity: number
   state: TerrainState
+  burningDuration: number
 }
 
 export enum TerrainState {
