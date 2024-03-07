@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import TerrainConfigProps, { TerrainState } from "../models/terrainConfig";
-import { temperatureColor } from "../utils/terrain-config";
+import { useSelector } from 'react-redux';
 import TerrainSquare from "./TerrainSquare";
-
-const initialTerrainConfig = {
-  coordinates: [],
-  temperature: 0,
-  humidity: 0,
-  state: TerrainState.None
-}
 
 const App = () => {
   const [width, setWidth] = useState<number>(15)
   const [height, setHeight] = useState<number>(15)
-  const [terrainConfig, setTerrainConfig] = useState<TerrainConfigProps>(initialTerrainConfig)
+  const terrainConfig = useSelector((state: any) => state.data.terrainConfig)
+  // const [terrainConfig, setTerrainConfig] = useState<TerrainConfigProps>(initialTerrainConfig)
   const [terrain, setTerrain] = useState<TerrainConfigProps[][]>([]);
 
   const handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
