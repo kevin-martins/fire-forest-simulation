@@ -7,15 +7,15 @@ const TerrainInfoPanel = () => {
       layout
       initial={{ y: -15, scale: 0.95 }}
       animate={{ y: 0, scale: 1 }}
-      exit={{ x: "100%", opacity: 0 }}
+      exit={{ scale: .4, opacity: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="p-2 flex items-start rounded gap-2 text-xs font-medium shadow-lg text-white bg-indigo-500 pointer-events-auto"
+      className="absolute top-7 -right-1/2 z-10 p-2 flex items-start rounded gap-2 text-xs font-medium shadow-lg text-white bg-indigo-500 pointer-events-auto"
     >
-      <FiCheckSquare className=" mt-0.5" />
-      <span>{'Yoooooooooooooo'}</span>
-      <button className="ml-auto mt-0.5">
+      {/* <FiCheckSquare className=" mt-0.5" /> */}
+      <span>{'details'}</span>
+      {/* <button className="ml-auto mt-0.5">
         <FiX />
-      </button>
+      </button> */}
     </motion.div>
   );
 };
