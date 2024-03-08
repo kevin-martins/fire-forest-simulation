@@ -7,7 +7,7 @@ export type TileConfigProps = {
   humidity: number
   state: TileState
   burningDuration: number
-  lifeTime: number
+  lifetime: number
 }
 
 export enum TileState {

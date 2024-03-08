@@ -1,16 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import TileConfigProps, { TileState } from '../models/terrainConfig';
 
-const initialState: TileConfigProps = {
+type InitialState = TileConfigProps
+
+const config = {
+  temperature: 15,
+  humidity: .5,
+  burningDuration: 1
+}
+
+const initialState: InitialState = {
+  ...config,
   coordinates: {
     row: 0,
     col: 0,
   },
-  temperature: 15,
-  humidity: .5,
   state: TileState.None,
-  burningDuration: 1,
-  lifeTime: 0
+  lifetime: 0
 };
 
 export const tileSlice = createSlice({
@@ -30,7 +36,7 @@ export const tileSlice = createSlice({
       state.burningDuration = action.payload
     },
     setLifeTime(state, action: PayloadAction<number>) {
-      state.lifeTime = action.payload
+      state.lifetime = action.payload
     }
   }
 });
