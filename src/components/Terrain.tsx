@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../app/store'
-import TileConfigProps from '../models/terrainConfig'
-import { AnimatePresence, motion } from 'framer-motion'
-import { temperatureColor } from '../utils/terrain-config'
-import { tileStateToText } from '../utils/utils'
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import TileConfigProps from '../models/terrainConfig';
+import { AnimatePresence, motion } from 'framer-motion';
+import { temperatureColor } from '../utils/terrain-config';
+import { tileStateToText } from '../utils/utils';
 
 const TileInfo = (terrain: TileConfigProps) => {
   return (
