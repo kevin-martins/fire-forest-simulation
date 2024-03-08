@@ -7,10 +7,11 @@ type Props = {
   description: string
   value: number
   reduxFunction: (value: number) => PayloadAction<number>
+  unit?: string
   step?: number
 }
 
-const InputNumber = ({ title, description, value, reduxFunction, step = 1 }: Props) => {
+const InputNumber = ({ title, description, value, reduxFunction, unit = '', step = 1 }: Props) => {
   const dispatch = useDispatch()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,10 +27,10 @@ const InputNumber = ({ title, description, value, reduxFunction, step = 1 }: Pro
   }
 
   return (
-    <div className="max-w-xs mx-auto">
-      <label htmlFor="quantity-input" className="block mb-2 text-sm font-medium text-white text">{title}:</label>
-      <p id="helper-text-explanation" className="mt-2 text-sm text-gray-500 dark:text-gray-400">{description}</p>
-      <div className="relative flex items-center max-w-[8rem]">
+    <div className="pl-5">
+      <label htmlFor="quantity-input" className="block mb-2 text-md font-medium text-white">{title}:</label>
+      <p id="helper-text-explanation" className="mt-2 text-sm text-gray-400 block align-top">{description}</p>
+      <div className="relative flex items-center max-w-[9rem]">
         <button
           type="button"
           id="decrement-button"
