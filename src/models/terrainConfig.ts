@@ -1,15 +1,19 @@
-export type TerrainConfigProps = {
-  coordinates: number[]
+export type TileConfigProps = {
+  coordinates: {
+    row: number,
+    col: number
+  }
   temperature: number
   humidity: number
-  state: TerrainState
+  state: TileState
   burningDuration: number
+  lifeTime: number
 }
 
-export enum TerrainState {
+export enum TileState {
   None,
   Fire,
   Ash
 }
 
-export default TerrainConfigProps
+export default TileConfigProps
