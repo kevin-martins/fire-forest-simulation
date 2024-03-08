@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import TileConfigProps, { TileState } from '../models/terrainConfig';
-import SimulationState from '../models/simulationState';
 
 const initialState: TileConfigProps = {
   coordinates: {
