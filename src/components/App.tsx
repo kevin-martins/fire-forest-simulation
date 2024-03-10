@@ -3,8 +3,26 @@ import Terrain from "./Terrain";
 import TerrainConfig from "./TerrainConfig";
 import TileConfig from "./TileConfig";
 import GameState from "./GameState";
+import Button from "./Button";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { setTerrain } from "../features/terrainSlice";
+import { handleTerrainGeneration } from "../utils/terrain-config";
+import { useEffect } from "react";
 
 const App = () => {
+  const { width, height } = useSelector((state: RootState) => state.terrainConfig)
+  const tileConfig = useSelector((state: RootState) => state.tileConfig)
+  const dispatch = useDispatch()
+
+  const handleBuild = () => {
+    dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
+  }
+
+  useEffect(() => {
+    handleBuild()
+  }, [])
+
   return (
     <div>
       <header>
@@ -20,6 +38,8 @@ const App = () => {
                 <TileConfig />
               </div>
             </div>
+            <Button text='Buil the Terrain' handleClick={handleBuild} />
+            <Button text='Buil the Terrain' handleClick={() => {}} />
           </div>
           <Terrain />
         </div>
@@ -34,7 +54,6 @@ const App = () => {
               <FaStepForward className=" text-white" />
             </button>
           </div> */}
-          
       </main>
     </div>
   );
