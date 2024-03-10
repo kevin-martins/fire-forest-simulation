@@ -22,9 +22,9 @@ export const explanationData = {
     delay: 1.7
   },
   [GameState.BeforeStart]: {
-    title: 'Last Thing...',
+    title: 'Ready ?',
     steps: [
-      '- Click the start simulation'
+      '- Once all is done, click the start simulation button'
     ],
     delay: .4
   },
