@@ -10,12 +10,20 @@ const App = () => {
       <header>
       </header>
       <main className="bg-slate-900 h-screen">
-        <div className="container mx-auto">
-          <div className="flex place-content-center">
+        <div className="container mx-auto grid grid-cols-2 h-full place-content-center">
+          <div className="w-max">
             <GameState />
-            <Terrain />
+            <div className="w-max">
+              <div className="flex flex-row gap-4 mb-4">
+                <TerrainConfig />
+                <div className="my-auto h-44 w-[.5px] bg-slate-400" />
+                <TileConfig />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-row gap-5 place-content-center mt-3">
+          <Terrain />
+        </div>
+          {/* <div className="flex flex-row gap-5 place-content-center mt-3">
             <button className="">
               <FaPlay className=" text-white" />
             </button>
@@ -25,15 +33,8 @@ const App = () => {
             <button className="">
               <FaStepForward className=" text-white" />
             </button>
-          </div>
-          <div className="w-max">
-            <div className="flex flex-row gap-4 mb-4">
-              <TerrainConfig />
-              <div className="my-auto h-44 w-[.5px] bg-slate-400" />
-              <TileConfig />
-            </div>
-          </div>
-        </div>
+          </div> */}
+          
       </main>
     </div>
   );
