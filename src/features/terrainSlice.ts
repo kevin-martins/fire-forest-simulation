@@ -1,13 +1,16 @@
-import { AsyncThunk, createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import TileConfigProps from '../models/terrainConfig';
 import SimulationState from '../models/simulationState';
+import GameState from '../models/gameState';
 
 interface InitialState {
   loading: boolean
   terrain: TileConfigProps[][]
   width: number
   height: number
+  gameState: GameState
   simulationState: SimulationState
+  hoverTile: boolean
   error: string | null
 }
 
@@ -20,7 +23,9 @@ const initialState: InitialState = {
   ...config,
   loading: false,
   terrain: [],
-  simulationState: SimulationState.Init,
+  gameState: GameState.Config,
+  simulationState: SimulationState.Auto,
+  hoverTile: false,
   error: null
 };
 
@@ -63,8 +68,14 @@ export const terrainSlice = createSlice({
     setTerrain(state, action: PayloadAction<TileConfigProps[][]>) {
       state.terrain = action.payload
     },
-    setState(state, action: PayloadAction<SimulationState>) {
+    setGameState(state, action: PayloadAction<GameState>) {
+      state.gameState = action.payload
+    },
+    setSimulationState(state, action: PayloadAction<SimulationState>) {
       state.simulationState = action.payload
+    },
+    setHoverTile(state, action: PayloadAction<boolean>) {
+      state.hoverTile = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -86,7 +97,10 @@ export const terrainSlice = createSlice({
 export const {
   setWidth,
   setHeight,
-  setTerrain
+  setTerrain,
+  setGameState,
+  setSimulationState,
+  setHoverTile
 } = terrainSlice.actions;
 
 export default terrainSlice.reducer;
