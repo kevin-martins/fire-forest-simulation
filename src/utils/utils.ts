@@ -1,4 +1,5 @@
 import GameState from "../models/gameState";
+import SimulationState from "../models/simulationState";
 import { TileState } from "../models/terrainConfig";
 
 export const randomNumberRange = (min: number, max: number): number => {
@@ -20,5 +21,13 @@ export const getNextGameState = (state: GameState): GameState => {
     case state === GameState.Fire: return GameState.BeforeStart
     case state === GameState.BeforeStart: return GameState.End
     default: return GameState.End
+  }
+}
+
+export const simulationStateToText = (state: SimulationState) => {
+  switch (true) {
+    case state === SimulationState.Auto: return 'Auto'
+    case state === SimulationState.Step: return 'Step by step'
+    default: return 'None'
   }
 }

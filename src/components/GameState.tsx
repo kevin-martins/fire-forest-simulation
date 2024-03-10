@@ -23,7 +23,7 @@ const GameStateList = () => {
   }
 
   return (
-    <div className='w-[450px] m-auto'>
+    <div className='w-[450px] mx-auto mb-12'>
       <div className=''>
         <motion.h1
           variants={titleVariants}

@@ -3,20 +3,26 @@ import { FaForwardStep } from "react-icons/fa6";
 import { MdAutorenew } from "react-icons/md";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { simulationStateToText } from "../utils/utils";
+import { setSimulationState } from "../features/terrainSlice";
+import SimulationState from "../models/simulationState";
 
 const DropDown = () => {
   const [open, setOpen] = useState(false)
+  const state = useSelector((state: RootState) => state.terrainConfig.simulationState)
 
   return (
     <div className="pl-5">
-      <label htmlFor="quantity-input" className="block mb-2 text-md font-medium text-white">Simulation Mode:</label>
+      <label htmlFor="select-input" className="block mb-2 text-md font-medium text-white">Simulation Mode:</label>
       <p id="helper-text-explanation" className="mt-2 text-sm text-gray-400 block align-top">the playing mode of the simulation</p>
       <motion.div animate={open ? "open" : "close"} className="relative">
         <button
           onClick={() => setOpen((pv) => !pv)}
-          className="flex items-center gap-2 px-3 py-2 rounded-md text-indigo-50 bg-indigo-500 hover:bg-indigo-500 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 rounded-md text-slate-200 bg-slate-600 hover:bg-slate-500 transition-colors duration-300"
         >
-          <span className="font-medium text-sm">Simulation play mode</span>
+          <span className="font-medium text-sm">{simulationStateToText(state)}</span>
           <motion.span variants={iconVariants}>
             <FiChevronDown />
           </motion.span>
@@ -25,11 +31,11 @@ const DropDown = () => {
         <motion.ul
           initial={wrapperVariants.close}
           variants={wrapperVariants}
-          style={{ originY: "top", translateX: "-50%" }}
-          className="flex flex-col gap-2 p-2 rounded-lg bg-white shadow-xl absolute top-[120%] left-[50%] w-48 overflow-hidden"
+          style={{ originY: "top" }}
+          className="flex flex-col gap-2 p-2 rounded-lg bg-slate-700 shadow-xl absolute top-[120%] w-48 overflow-hidden"
         >
-          <Option setOpen={setOpen} Icon={<MdAutorenew className="group-hover:animate-spin" />} text="Auto" />
-          <Option setOpen={setOpen} Icon={<FaForwardStep className="group-hover:animate-[wiggle_1s_ease-in-out_infinite]" />} text="Step by Step" />
+          <Option setOpen={setOpen} newState={SimulationState.Auto} Icon={<MdAutorenew className="group-hover:animate-spin" />} />
+          <Option setOpen={setOpen} newState={SimulationState.Step} Icon={<FaForwardStep className="group-hover:animate-bounce" />} />
         </motion.ul>
       </motion.div>
     </div>
@@ -37,22 +43,29 @@ const DropDown = () => {
 }
 
 type OptionProps = {
-  text: string
+  newState: SimulationState
   Icon: JSX.Element
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const Option = ({ text, Icon, setOpen }: OptionProps) => {
+const Option = ({ newState, Icon, setOpen }: OptionProps) => {
+  const dispatch = useDispatch()
+
+  const handleClick = () => {
+    setOpen(false)
+    dispatch(setSimulationState(newState))
+  }
+
   return (
     <motion.li
       variants={itemVariants}
-      onClick={() => setOpen(false)}
-      className="group flex items-center gap-2 w-full p-2 text-xs font-medium whitespace-nowrap rounded-md hover:bg-indigo-100 text-slate-700 hover:text-indigo-500 transition-colors cursor-pointer"
+      onClick={handleClick}
+      className="group flex items-center gap-2 w-full p-2 text-xs font-medium whitespace-nowrap rounded-md text-slate-300 hover:text-white transition-colors cursor-pointer"
     >
       <motion.span variants={actionIconVariants}>
         {Icon} 
       </motion.span>
-      <span>{text}</span>
+      <span>{simulationStateToText(newState)}</span>
     </motion.li>
   )
 }
