@@ -9,9 +9,12 @@ const App = () => {
     <div>
       <header>
       </header>
-      <main className="bg-slate-800 h-screen">
+      <main className="bg-slate-900 h-screen">
         <div className="container mx-auto">
-          <Terrain />
+          <div className="flex place-content-center">
+            <GameState />
+            <Terrain />
+          </div>
           <div className="flex flex-row gap-5 place-content-center mt-3">
             <button className="">
               <FaPlay className=" text-white" />
@@ -22,7 +25,6 @@ const App = () => {
             <button className="">
               <FaStepForward className=" text-white" />
             </button>
-            <GameState />
           </div>
           <div className="w-max">
             <div className="flex flex-row gap-4 mb-4">
