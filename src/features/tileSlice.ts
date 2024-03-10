@@ -15,7 +15,7 @@ const initialState: InitialState = {
     row: 0,
     col: 0,
   },
-  state: TileState.None,
+  state: TileState.Initial,
   lifetime: 0
 };
 

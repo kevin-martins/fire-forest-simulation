@@ -1,7 +1,6 @@
 export enum SimulationState {
-    Init,
-    Step,
     Auto,
+    Step,
     Stop
 }
 

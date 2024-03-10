@@ -11,8 +11,8 @@ export type TileConfigProps = {
 }
 
 export enum TileState {
-  None,
-  Fire,
+  Initial,
+  Burning,
   Ash
 }
 
