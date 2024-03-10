@@ -1,4 +1,4 @@
-import SimulationState from "../models/simulationState";
+import GameState from "../models/gameState";
 import { TileState } from "../models/terrainConfig";
 
 export const randomNumberRange = (min: number, max: number): number => {
@@ -6,18 +6,19 @@ export const randomNumberRange = (min: number, max: number): number => {
 }
 
 export const tileStateToText = (state: TileState) => {
-  switch(state) {
-    case 0: return 'Forest'
-    case 1: return 'Fire'
-    case 2: return 'Ash'
+  switch (true) {
+    case state === TileState.Initial: return 'Initial'
+    case state === TileState.Burning: return 'Burning'
+    case state === TileState.Ash: return 'Burned'
+    default: return 'None'
   }
 }
 
-export const simulationStateToText = (state: SimulationState) => {
-  switch(state) {
-    case 0: return 'Initialisation'
-    case 1: return 'Step by Step'
-    case 2: return 'Auto'
-    case 2: return 'Stop'
+export const getNextGameState = (state: GameState): GameState => {
+  switch (true) {
+    case state === GameState.Config: return GameState.Fire
+    case state === GameState.Fire: return GameState.BeforeStart
+    case state === GameState.BeforeStart: return GameState.End
+    default: return GameState.End
   }
 }
