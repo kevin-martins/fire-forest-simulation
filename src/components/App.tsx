@@ -62,9 +62,9 @@ const App = () => {
   const startButtonDecoration = () => {
     if (gameState === GameState.Running) {
       if (playMode === PlayModeState.Step) {
-        return <FaForwardStep className="animate-bounce" />
-      } else if (playMode === PlayModeState.Auto) {
         return <MdAutorenew className="animate-spin" />
+      } else if (playMode === PlayModeState.Auto) {
+        return <FaForwardStep className="animate-bounce" />
       }
     }
     return <p>Start</p>
