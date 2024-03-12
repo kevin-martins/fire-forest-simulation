@@ -4,9 +4,10 @@ import TileConfigProps, { TileState } from '../models/terrainConfig';
 type InitialState = TileConfigProps
 
 const config = {
-  temperature: 15,
-  humidity: .5,
-  burningDuration: 1
+  temperature: 22,
+  humidity: 36,
+  burningDuration: 1,
+  burnChance: 50
 }
 
 const initialState: InitialState = {
@@ -37,6 +38,9 @@ export const tileSlice = createSlice({
     },
     setLifeTime(state, action: PayloadAction<number>) {
       state.lifetime = action.payload
+    },
+    setBurnChance(state, action: PayloadAction<number>) {
+      state.burnChance = action.payload
     }
   }
 });
@@ -46,7 +50,8 @@ export const {
   setHumidity,
   setState,
   setBurningDuration,
-  setLifeTime
+  setLifeTime,
+  setBurnChance
 } = tileSlice.actions;
 
 export default tileSlice.reducer;
