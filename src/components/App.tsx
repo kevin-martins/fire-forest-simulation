@@ -1,22 +1,73 @@
-import { FaPlay, FaRegPauseCircle, FaStepForward,  } from "react-icons/fa";
 import Terrain from "./Terrain";
 import TerrainConfig from "./TerrainConfig";
 import TileConfig from "./TileConfig";
-import GameState from "./GameState";
+import GameStateList from "./GameStateList";
 import Button from "./Button";
+import GameState from '../models/gameState'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import { setTerrain } from "../features/terrainSlice";
-import { handleTerrainGeneration } from "../utils/terrain-config";
+import { setAshTiles, setBurningTiles, setTerrain, setGameState } from "../features/terrainSlice";
+import { burnNeighborTiles, handleTerrainGeneration } from "../utils/terrain-config";
 import { useEffect } from "react";
+import PlayModeState from "../models/playModeState";
+import { FaForwardStep } from "react-icons/fa6";
+import { MdAutorenew } from "react-icons/md";
+import IgniteConfig from "./IgniteConfig";
 
 const App = () => {
-  const { width, height } = useSelector((state: RootState) => state.terrainConfig)
+  const {
+    width,
+    height,
+    terrain,
+    burningTiles,
+    ashTiles,
+    gameState,
+    playMode
+  } = useSelector((state: RootState) => state.terrainConfig)
   const tileConfig = useSelector((state: RootState) => state.tileConfig)
   const dispatch = useDispatch()
 
   const handleBuild = () => {
     dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
+    dispatch(setBurningTiles(0))
+    dispatch(setAshTiles(0))
+    dispatch(setGameState(GameState.Config))
+  }
+
+  const simulationStepPlusOne = ():boolean => {
+    if (burningTiles !== 0) {
+      const data = burnNeighborTiles(width, height, terrain)
+      dispatch(setTerrain(data.terrain))
+      dispatch(setBurningTiles(data.burning))
+      dispatch(setAshTiles(ashTiles + data.ash))
+      if (data.burning === 0) {
+        dispatch(setGameState(GameState.End))
+      }
+      return true
+    } else {
+      console.log("There is no tile to burn")
+      return false
+    }
+  }
+
+  const handleStart = () => {
+    if (gameState === GameState.Config && burningTiles > 0) {
+      simulationStepPlusOne()
+      dispatch(setGameState(GameState.Running))
+    } else if (gameState === GameState.Running) {
+      simulationStepPlusOne()
+    }
+  }
+
+  const startButtonDecoration = () => {
+    if (gameState === GameState.Running) {
+      if (playMode === PlayModeState.Step) {
+        return <FaForwardStep className="animate-bounce" />
+      } else if (playMode === PlayModeState.Auto) {
+        return <MdAutorenew className="animate-spin" />
+      }
+    }
+    return <p>Start</p>
   }
 
   useEffect(() => {
@@ -24,36 +75,36 @@ const App = () => {
   }, [])
 
   return (
-    <div>
-      <header>
+    <div className="bg-slate-900 h-screen">
+      <header className="max-w-4xl mx-auto mb-12">
+        <h1 className="text-center text-3xl font-medium text-white pt-8 mb-4">Fire Simulation</h1>
+        <p className="text-slate-300 text-center">
+          This is a simple simulation of the spread of fire in a terrain. Explore the dynamics of
+          forest fires as they propagate through the landscape. Watch as the fire spreads, consuming vegetation
+          and altering the terrain. Gain insights into the behavior of fires and their impact on ecosystems.
+        </p>
       </header>
-      <main className="bg-slate-900 h-screen">
-        <div className="container mx-auto grid grid-cols-2 h-full place-content-center">
-          <div className="w-max">
-            <GameState />
-            <div className="w-max">
-              <div className="flex flex-row gap-4 mb-4">
+      <main className="bg-slate-900">
+        <div className="container mx-auto flex lg:flex-row flex-col h-full place-items-center">
+          <div className="pl-6 w-1/2 mx-auto">
+            <GameStateList />
+            <div className="">
+              <div className="flex flex-row gap-5 mb-4 h-full">
                 <TerrainConfig />
-                <div className="my-auto h-44 w-[.5px] bg-slate-400" />
+                <div className="m-auto h-72 mr-3 w-[.5px] bg-slate-400" />
                 <TileConfig />
               </div>
             </div>
-            <Button text='Buil the Terrain' handleClick={handleBuild} />
-            <Button text='Buil the Terrain' handleClick={() => {}} />
+            <Button handleClick={handleBuild} style={{ margin: '0 0 0 auto' }}>
+              <p>Build Terrain</p>
+            </Button>
+            <IgniteConfig />
+            <Button handleClick={handleStart} style={{ margin: '5px 0 0 auto', padding: '15px 80px' }}>
+              {startButtonDecoration()}
+            </Button>
           </div>
           <Terrain />
         </div>
-          {/* <div className="flex flex-row gap-5 place-content-center mt-3">
-            <button className="">
-              <FaPlay className=" text-white" />
-            </button>
-            <button className="scale-150">
-              <FaRegPauseCircle className=" text-white" />
-            </button>
-            <button className="">
-              <FaStepForward className=" text-white" />
-            </button>
-          </div> */}
       </main>
     </div>
   );
