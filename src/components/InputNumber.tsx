@@ -9,7 +9,7 @@ type Props = {
   value: number
   range: {
     min: number
-    max: number
+    max?: number
   }
   reduxFunction: (value: number) => PayloadAction<number>
   unit?: string
@@ -22,10 +22,10 @@ const InputNumber = ({ id, title, description, value, range, reduxFunction, unit
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = Number(event.target.value)
-    if (inputValue > range.max) {
-      dispatch(reduxFunction(range.max))
-    } else if (inputValue < range.min) {
+    if (inputValue < range.min) {
       dispatch(reduxFunction(range.min))
+    }  else if (range.max !== undefined && inputValue > range.max) {
+      dispatch(reduxFunction(range.max))
     } else {
       dispatch(reduxFunction(inputValue))
     }
@@ -35,7 +35,7 @@ const InputNumber = ({ id, title, description, value, range, reduxFunction, unit
     <div>
       <label htmlFor={`${id}-input`} className="block mb-px text-md font-medium text-white">
         {title}:
-        <p id="helper-text-explanation" className="font-normal mt-1 text-sm text-gray-400 block align-top">{description} from {range.min} to {range.max}{unit}</p>
+        <p id="helper-text-explanation" className="font-normal mt-1 text-sm text-gray-400 block align-top">{description}{range?.max && ` from ${range.min} to ${range.max}${unit}`}</p>
       </label>
       <div className="relative flex items-center max-w-[8rem]">
         <input

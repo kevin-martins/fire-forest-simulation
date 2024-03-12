@@ -86,12 +86,12 @@ const App = () => {
       </header>
       <main className="bg-slate-900">
         <div className="container mx-auto flex lg:flex-row flex-col h-full place-items-center">
-          <div className="pl-6 w-1/2 mx-auto">
+          <div className="pl-6 w-1/2 ml-auto">
             <GameStateList />
             <div className="">
               <div className="flex flex-row gap-5 mb-4 h-full">
                 <TerrainConfig />
-                <div className="m-auto h-72 mr-3 w-[.5px] bg-slate-400" />
+                <div className="my-auto h-72 mr-3 w-[.5px] bg-slate-400" />
                 <TileConfig />
               </div>
             </div>

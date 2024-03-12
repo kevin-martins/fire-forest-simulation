@@ -39,7 +39,7 @@ const TileConfig = () => {
         title='Burning Duration'
         description='time required for a burning tile to become ash'
         value={burningDuration}
-        range={{ min: 1, max: 10 }}
+        range={{ min: 1 }}
         reduxFunction={setBurningDuration}
         unit='turns'
       />
