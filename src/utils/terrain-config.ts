@@ -1,4 +1,5 @@
-import TileConfigProps from "../models/terrainConfig";
+import TileConfigProps, { TileState } from "../models/terrainConfig";
+import { randomNumberRange } from "./utils";
 
 export const temperatureColor = (temperature: number) => {
   switch (true) {
@@ -13,7 +14,11 @@ export const temperatureColor = (temperature: number) => {
   }
 }
 
-export const handleTerrainGeneration = (width: number, height: number, tileConfig: TileConfigProps): TileConfigProps[][] => {
+export const handleTerrainGeneration = (
+  width: number,
+  height: number,
+  tileConfig: TileConfigProps
+): TileConfigProps[][] => {
   const newTerrain: TileConfigProps[][] = []
   for (let i = 0; i < height; i++) {
     const row: TileConfigProps[] = []
@@ -30,4 +35,114 @@ export const handleTerrainGeneration = (width: number, height: number, tileConfi
     newTerrain.push(row)
   }
   return newTerrain
+}
+
+export const updateTile = (
+  terrain: TileConfigProps[][], 
+  coordinates: { row: number, col: number }, 
+  newProps: Partial<TileConfigProps>
+): TileConfigProps[][] => {
+  const newArray = terrain.map((row) => [...row])
+  const { row, col } = coordinates
+  if (row >= 0 && row < newArray.length && col >= 0 && col < newArray[row].length) {
+    newArray[row][col] = {
+      ...newArray[row][col],
+      ...newProps
+    }
+  }
+  return newArray
+}
+
+export const igniteRandomTiles = (
+  width: number,
+  height: number,
+  quantity: number,
+  terrain: TileConfigProps[][]
+): TileConfigProps[][] => {
+  const getRandomTile = () => newArray[randomNumberRange(0, height - 1)][randomNumberRange(0, width - 1)]
+  const newArray = terrain.map((row) => [...row])
+  for (let i = 0; i < quantity; i++) {
+    while (true) {
+      const randomTile = getRandomTile()
+      if (randomTile.state === TileState.Initial) {
+        newArray[randomTile.coordinates.row][randomTile.coordinates.col] = {
+          ...randomTile,
+          state: TileState.Burning
+        }
+        break
+      }
+    }
+  }
+  return newArray
+}
+
+const shouldCatchFire = (burningChance: number) => Math.random() < (burningChance / 100);
+
+type SimulationProps = {
+ terrain: TileConfigProps[][]
+ burning: number
+ ash: number
+}
+
+export const burnNeighborTiles = (
+  width: number,
+  height: number,
+  terrain: TileConfigProps[][]
+): SimulationProps => {
+  let burning = 0;
+  let ash = 0
+  const newTerrain: TileConfigProps[][] = []
+  
+  // Set changes on Burning tiles
+  for (let i = 0; i < height; i++) {
+    const newRow: TileConfigProps[] = []
+    for (let j = 0; j < width; j++) {
+      let newTile: TileConfigProps = { ...terrain[i][j] }
+    
+      if (newTile.state !== TileState.Ash) {
+        newTile.lifetime += 1
+        if (newTile.state === TileState.Burning) {
+          newTile.burningDuration -= 1
+          burning += 1
+          if (newTile.burningDuration <= 0) {
+            newTile.state = TileState.Ash
+            burning -= 1
+            ash += 1
+          }
+        }
+      }
+      newRow.push(newTile)
+    }
+    newTerrain.push(newRow)
+  }
+  // Set burning tiles's Neighbors on fire
+  for (let i = 0; i < height; i++) {
+    for (let j = 0; j < width; j++) {
+      const currentTile = terrain[i][j]
+      // Neighbors changes
+      if (currentTile.state === TileState.Burning) {
+        const neighbors = [
+          { row: i - 1, col: j },
+          { row: i + 1, col: j },
+          { row: i, col: j - 1 },
+          { row: i, col: j + 1 }  
+        ]
+
+        neighbors.forEach(neighbor => {
+          const { row, col } = neighbor
+          if (row >= 0 && row < terrain.length && col >= 0 && col < terrain[row].length
+            && terrain[row][col].state === TileState.Initial && newTerrain[row][col].state === TileState.Initial
+            && shouldCatchFire(terrain[row][col].burnChance)
+          ) {
+            newTerrain[row][col] = {
+              ...terrain[row][col],
+              state: TileState.Burning
+            }
+            burning += 1
+          }
+        })
+      }
+    }
+  }
+  return { terrain: newTerrain, ash, burning }
 }

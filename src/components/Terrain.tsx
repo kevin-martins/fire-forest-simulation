@@ -3,11 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import TileConfigProps, { TileState } from '../models/terrainConfig';
 import { AnimatePresence, motion } from 'framer-motion';
-import { temperatureColor } from '../utils/terrain-config';
-import { tileStateToText } from '../utils/utils';
-import { setHoverTile, setTerrain } from '../features/terrainSlice';
+import { updateTile } from '../utils/terrain-config';
+import { getBackgroundColor, tileStateToText } from '../utils/utils';
+import { setBurningTiles, setHoverTile, setTerrain } from '../features/terrainSlice';
 import { BsFire } from "react-icons/bs";
+import { HiArrowNarrowDown, HiArrowNarrowLeft, HiArrowNarrowRight, HiArrowNarrowUp } from "react-icons/hi";
+import { MdOutlineLensBlur } from 'react-icons/md';
 import GameState from '../models/gameState';
+import SimulationStats from './SimulationStats';
+import CheckBox from './CheckBox';
 
 const TileInfo = (tile: TileConfigProps) => {
   return (
@@ -17,36 +21,22 @@ const TileInfo = (tile: TileConfigProps) => {
       animate={{ y: 0, scale: 1 }}
       exit={{ scale: .4, opacity: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="absolute w-max top-14 z-10 p-2 rounded gap-2 text-base shadow-lg text-white bg-slate-600 pointer-events-auto"
+      className="absolute w-max top-14 z-50 p-2 rounded gap-2 text-base shadow-lg text-white bg-slate-600 pointer-events-auto"
     >
       <div>
         <p>Temperature: {tile.temperature} °C</p>
-        <p>Humidity: {tile.humidity * 100}%</p>
+        <p>Humidity: {tile.humidity}%</p>
         <p>Burning: {tile.burningDuration} turn</p>
         <p>State: {tileStateToText(tile.state)}</p>
+        <p>Burn rate: {tile.burnChance} %</p>
+        <p>Lifetime: {tile.lifetime} turn</p>
       </div>
     </motion.div>
   )
 }
 
-const modifyObjectProps = (
-  terrain: TileConfigProps[][], 
-  coordinates: { row: number, col: number }, 
-  newProps: Partial<TileConfigProps>
-): TileConfigProps[][] => {
-  const newArray = terrain.map((row) => [...row])
-  const { row, col } = coordinates
-  if (row >= 0 && row < newArray.length && col >= 0 && col < newArray[row].length) {
-    newArray[row][col] = {
-      ...newArray[row][col],
-      ...newProps
-    }
-  }
-  return newArray
-}
-
 const Tile = (tile: TileConfigProps) => {
-  const { terrain, gameState, hoverTile } = useSelector((state: RootState) => state.terrainConfig)
+  const { terrain, hoverTile, gameState, burningTiles } = useSelector((state: RootState) => state.terrainConfig)
   const [isHovered, setIsHovered] = useState<boolean>(false)
   const dispatch = useDispatch()
 
@@ -58,13 +48,68 @@ const Tile = (tile: TileConfigProps) => {
     setIsHovered(false)
   }
 
+  // Get Burning tiles Neighbors, display arrow to it if in Initial state
+  const nextFireMove = () => {
+    const { row, col } = tile.coordinates
+    if (tile.state === TileState.Burning) {
+      const neighbors = [
+        { row: row - 1, col: col },//up
+        { row: row + 1, col: col },//down
+        { row: row, col: col - 1 },//left
+        { row: row, col: col + 1 } //right
+      ]
+
+      return neighbors.map((neighbor, i) => {
+        const { row, col } = neighbor
+        if (row >= 0 && row < terrain.length && col >= 0 && col < terrain[row].length
+          && terrain[row][col].state === TileState.Initial
+        ) {
+          if (i === 0) {
+            // Arrow Up
+            return <HiArrowNarrowUp className='absolute z-10 -top-4 right-1 scale-150 pointer-events-none' />
+          } else if (i === 1) {
+            // Arrow Down
+            return <HiArrowNarrowDown className='absolute z-10 -bottom-4 left-1 scale-150' />
+          } else if (i === 2) {
+            // Arrow Left
+            return <HiArrowNarrowLeft className='absolute z-10 scale-150 right-6 top-1' />
+          } else {
+            // Arrow Down
+            return <HiArrowNarrowRight className='absolute z-10 scale-150 left-6 top-1' />
+          }
+        }
+      })
+    }
+  }
+
   const handleClick = () => {
-    if (gameState === GameState.Fire && tile.state === TileState.Burning) {
-      const updatedTerrain = modifyObjectProps(terrain, tile.coordinates, { state: TileState.Burning })
-      dispatch(setTerrain(updatedTerrain))
-    } else if (gameState === GameState.Fire) {
-      const updatedTerrain = modifyObjectProps(terrain, tile.coordinates, { state: TileState.Burning })
-      dispatch(setTerrain(updatedTerrain))
+    if (gameState === GameState.Config) {
+      if (tile.state === TileState.Burning) {
+        const updatedTerrain = updateTile(terrain, tile.coordinates, { state: TileState.Initial })
+        dispatch(setTerrain(updatedTerrain))
+      } else if (tile.state === TileState.Initial) {
+        const updatedTerrain = updateTile(terrain, tile.coordinates, { state: TileState.Burning })
+        dispatch(setTerrain(updatedTerrain))
+        dispatch(setBurningTiles(burningTiles + 1))
+      }
+    }
+  }
+
+  const tileIcon = () => {
+    const fadeFireIcon = <BsFire className='w-6 h-6 m-auto text-red-600/50 animate-bounce' />
+    const plainFireIcon = <BsFire className='w-6 h-6 m-auto text-red-600 animate-bounce relative z-30' />
+    if (gameState === GameState.Config) {
+      if (!isHovered && tile.state === TileState.Burning) {
+        return plainFireIcon
+      } else if ((isHovered && tile.state === TileState.Burning) || (isHovered && tile.state === TileState.Initial)) {
+        return fadeFireIcon
+      }
+    } else {
+      if (tile.state === TileState.Burning) {
+        return plainFireIcon
+      } else if (tile.state === TileState.Ash) {
+        return <MdOutlineLensBlur className='w-6 h-6 m-auto rounded' />
+      }
     }
   }
 
@@ -74,11 +119,11 @@ const Tile = (tile: TileConfigProps) => {
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
         onClick={handleClick}
-        className={`w-6 h-6 rounded ${temperatureColor(tile.temperature)}`}
+        className={`relative w-6 h-6 rounded ${gameState !== GameState.Config && 'cursor-default'}`}
+        style={{ backgroundColor: getBackgroundColor(tile.state) }}
       >
-        {tile.state === TileState.Burning && <BsFire className='w-6 h-6 m-auto text-red-600 animate-bounce' />}
-        {isHovered && tile.state !== TileState.Burning && gameState === GameState.Fire && <BsFire className='w-6 h-6 m-auto text-red-600/50 animate-pulse' />}
-        {tile.state === TileState.Ash && <BsFire className='w-6 h-6 m-auto text-black' />}
+        {tileIcon()}
+        {nextFireMove()}
       </button>
       <AnimatePresence>
         {isHovered && hoverTile && <TileInfo {...tile} />}
@@ -88,15 +133,16 @@ const Tile = (tile: TileConfigProps) => {
 }
 
 const Terrain = () => {
-  const { terrain, height, width } = useSelector((state: RootState) => state.terrainConfig)
+  const { terrain } = useSelector((state: RootState) => state.terrainConfig)
   const dispatch = useDispatch()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("click")
     dispatch(setHoverTile(event.target.checked))
   }
 
   return (
-    <div className="w-1/2 mx-auto ml-5">
+    <div className="mx-auto ml-5">
       <div className=''>
         {terrain.map((row: TileConfigProps[], i: number) => (
           <div key={i} className="flex flex-row gap-1">
@@ -106,32 +152,8 @@ const Terrain = () => {
           </div>
         ))}
       </div>
-      <div className='flex'>
-        <div className="inline-flex items-center">
-          <label className="relative flex items-center p-3 rounded-full cursor-pointer" htmlFor="check">
-            <input
-              onChange={handleChange}
-              type="checkbox"
-              className="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-slate-200 before:opacity-0 before:transition-opacity checked:border-slate-600 checked:bg-slate-600 checked:before:bg-slate-600 hover:before:opacity-10"
-              id="check"
-            />
-            <span
-              className="absolute text-white transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"
-                stroke="currentColor" stroke-width="1">
-                <path fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"></path>
-              </svg>
-            </span>
-          </label>
-          <label className="mt-px font-light text-slate-300 cursor-pointer select-none" htmlFor="check">
-            hover over the tile to view its parameters
-          </label>
-        </div>
-        <p className='px-3 inline-flex items-center text-slate-300 font-light'>{height * width} tiles</p>
-        <p className='inline-flex items-center text-slate-300 font-light'></p>
-      </div>
+      <CheckBox text='hover over a tile to view its parameters' handleChange={handleChange} />
+      <SimulationStats />
     </div>
   )
 }
