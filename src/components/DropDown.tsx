@@ -1,24 +1,26 @@
 import { FiChevronDown } from "react-icons/fi";
 import { FaForwardStep } from "react-icons/fa6";
-import { MdAutorenew } from "react-icons/md";
 import { motion } from "framer-motion";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { simulationStateToText } from "../utils/utils";
 import { setSimulationState } from "../features/terrainSlice";
-import SimulationState from "../models/simulationState";
+import PlayModeState from "../models/playModeState";
 
 const DropDown = () => {
   const [open, setOpen] = useState(false)
-  const state = useSelector((state: RootState) => state.terrainConfig.simulationState)
+  const state = useSelector((state: RootState) => state.terrainConfig.playMode)
 
   return (
-    <div className="pl-5">
-      <label htmlFor="select-input" className="block mb-2 text-md font-medium text-white">Simulation Mode:</label>
-      <p id="helper-text-explanation" className="mt-2 text-sm text-gray-400 block align-top">the playing mode of the simulation</p>
+    <div>
+      <label htmlFor="playmode-input" className="block text-md font-medium text-white">
+        Simulation Mode:
+        <p id="helper-text-explanation" className="font-normal mt-1 text-sm text-gray-400 block align-top">the playing mode of the simulation</p>
+      </label>
       <motion.div animate={open ? "open" : "close"} className="relative">
         <button
+          id='playmode-input'
           onClick={() => setOpen((pv) => !pv)}
           className="flex items-center gap-2 px-3 py-2 rounded-md text-slate-200 bg-slate-600 hover:bg-slate-500 transition-colors duration-300"
         >
@@ -34,8 +36,7 @@ const DropDown = () => {
           style={{ originY: "top" }}
           className="flex flex-col gap-2 p-2 rounded-lg bg-slate-700 shadow-xl absolute top-[120%] w-48 overflow-hidden"
         >
-          <Option setOpen={setOpen} newState={SimulationState.Auto} Icon={<MdAutorenew className="group-hover:animate-spin" />} />
-          <Option setOpen={setOpen} newState={SimulationState.Step} Icon={<FaForwardStep className="group-hover:animate-bounce" />} />
+          <Option setOpen={setOpen} newState={PlayModeState.Step} Icon={<FaForwardStep className="group-hover:animate-bounce" />} />
         </motion.ul>
       </motion.div>
     </div>
@@ -43,7 +44,7 @@ const DropDown = () => {
 }
 
 type OptionProps = {
-  newState: SimulationState
+  newState: PlayModeState
   Icon: JSX.Element
   setOpen: Dispatch<SetStateAction<boolean>>
 }
