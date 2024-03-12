@@ -7,6 +7,7 @@ export type TileConfigProps = {
   humidity: number
   state: TileState
   burningDuration: number
+  burnChance: number
   lifetime: number
 }
 
