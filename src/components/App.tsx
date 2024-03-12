@@ -34,7 +34,7 @@ const App = () => {
     dispatch(setGameState(GameState.Config))
   }
 
-  const simulationStepPlusOne = ():boolean => {
+  const nextSimulationStep = ():boolean => {
     if (burningTiles !== 0) {
       const data = burnNeighborTiles(width, height, terrain)
       dispatch(setTerrain(data.terrain))
@@ -52,10 +52,10 @@ const App = () => {
 
   const handleStart = () => {
     if (gameState === GameState.Config && burningTiles > 0) {
-      simulationStepPlusOne()
+      nextSimulationStep()
       dispatch(setGameState(GameState.Running))
     } else if (gameState === GameState.Running) {
-      simulationStepPlusOne()
+      nextSimulationStep()
     }
   }
 
