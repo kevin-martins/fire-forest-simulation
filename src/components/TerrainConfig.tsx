@@ -9,9 +9,21 @@ const TerrainConfig = () => {
 
   return (
     <div className='flex flex-col'>
-      <h1 className='text-white text-lg font-medium'>Terrain Configuration</h1>
-      <InputNumber title='Width' description='the width of the terrain' value={width} reduxFunction={setWidth} />
-      <InputNumber title='Height' description='the height of the terrain' value={height} reduxFunction={setHeight} />
+      <h1 className='text-white text-lg font-medium -translate-x-5'>Terrain Configuration</h1>
+      <InputNumber
+        id='width'
+        title='Width'
+        description='the width of the terrain'
+        value={width} reduxFunction={setWidth}
+        unit='tiles'
+      />
+      <InputNumber
+        id='height'
+        title='Height'
+        description='the height of the terrain'
+        value={height} reduxFunction={setHeight}
+        unit='tiles'
+      />
       <DropDown />
     </div>
   )
