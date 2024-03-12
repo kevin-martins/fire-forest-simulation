@@ -1,7 +1,6 @@
 export enum GameState {
     Config,
-    Fire,
-    BeforeStart,
+    Running,
     End
 }
 
