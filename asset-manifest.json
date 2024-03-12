@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/fire-forest-simulation/static/css/main.3c6ce515.css",
-    "main.js": "/fire-forest-simulation/static/js/main.3d83ffe7.js",
+    "main.js": "/fire-forest-simulation/static/js/main.b1ff451b.js",
     "index.html": "/fire-forest-simulation/index.html",
     "main.3c6ce515.css.map": "/fire-forest-simulation/static/css/main.3c6ce515.css.map",
-    "main.3d83ffe7.js.map": "/fire-forest-simulation/static/js/main.3d83ffe7.js.map"
+    "main.b1ff451b.js.map": "/fire-forest-simulation/static/js/main.b1ff451b.js.map"
   },
   "entrypoints": [
     "static/css/main.3c6ce515.css",
-    "static/js/main.3d83ffe7.js"
+    "static/js/main.b1ff451b.js"
   ]
 }
