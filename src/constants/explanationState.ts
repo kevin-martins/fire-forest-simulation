@@ -4,37 +4,26 @@ export const explanationData = {
   [GameState.Config]: {
     title: 'Update Settings',
     steps: [
-      '- Get more control by changing the propreties down bellow',
-      '- Rebuild the terrain if you did change something',
-      '- Follow your needs, no need to be shy !',
-      '- Click the button to continue'
-    ],
-    delay: 2
+      "- Get more control by changing propreties down bellow",
+      "- After any changes, rebuild the terrain with the 'Build Terrain' button",
+      "- Ignite green tiles by clicking on it, click again to remove or use the 'Ignite' button",
+      "- Perfect ! Let's run the simulation now by clicking the 'Start' button"
+    ]
   },
-  [GameState.Fire]: {
-    title: 'Add Fire on Tiles',
+  [GameState.Running]: {
+    title: 'Simulation is Running...',
     steps: [
-      "- Now it's time to add fire in the scene",
-      '- Hover a tile to preview the fire',
-      '- Click on it to apply the fire on it',
-      '- Click the button to continue'
-    ],
-    delay: 1.7
-  },
-  [GameState.BeforeStart]: {
-    title: 'Ready ?',
-    steps: [
-      '- Once all is done, click the start simulation button'
-    ],
-    delay: .4
+      "- Cool ! The simulation is now running",
+      "- Keep clicking to run the next simulation step"
+    ]
   },
   [GameState.End]: {
     title: 'Simulation Completed',
     steps: [
-      '- The simulation has ended',
-      '- Get more detail by checking the simulation stats'
-    ],
-    delay: .8
+      "- The simulation has ended",
+      "- Get more detail by checking the simulation stats",
+      "- To reset the terrain, just rebuild it with the 'Build Terrain' button !"
+    ]
   }
 }
 
