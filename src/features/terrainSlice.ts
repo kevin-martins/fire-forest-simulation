@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import TileConfigProps from '../models/terrainConfig';
-import SimulationState from '../models/simulationState';
+import PlayModeState from '../models/playModeState';
 import GameState from '../models/gameState';
 
 interface InitialState {
@@ -9,9 +9,12 @@ interface InitialState {
   width: number
   height: number
   gameState: GameState
-  simulationState: SimulationState
+  playMode: PlayModeState
   hoverTile: boolean
-  error: string | null
+  error: string[]
+  burningTiles: number
+  ashTiles: number
+  autoIgniteQuantity: number
 }
 
 const config = {
@@ -24,9 +27,12 @@ const initialState: InitialState = {
   loading: false,
   terrain: [],
   gameState: GameState.Config,
-  simulationState: SimulationState.Auto,
+  playMode: PlayModeState.Step,
   hoverTile: false,
-  error: null
+  error: [],
+  burningTiles: 0,
+  ashTiles: 0,
+  autoIgniteQuantity: 20
 };
 
 export const generateTerrain = createAsyncThunk(
@@ -71,17 +77,30 @@ export const terrainSlice = createSlice({
     setGameState(state, action: PayloadAction<GameState>) {
       state.gameState = action.payload
     },
-    setSimulationState(state, action: PayloadAction<SimulationState>) {
-      state.simulationState = action.payload
+    setSimulationState(state, action: PayloadAction<PlayModeState>) {
+      state.playMode = action.payload
     },
     setHoverTile(state, action: PayloadAction<boolean>) {
       state.hoverTile = action.payload
+    },
+    setBurningTiles(state, action: PayloadAction<number>) {
+      console.log(action.payload)
+      state.burningTiles = action.payload
+    },
+    setAshTiles(state, action: PayloadAction<number>) {
+      state.ashTiles = action.payload
+    },
+    setAutoIgniteQuantity(state, action: PayloadAction<number>) {
+      state.autoIgniteQuantity = action.payload
+    },
+    addError(state, action: PayloadAction<string>) {
+      state.error.push(action.payload)
     }
   },
   extraReducers: (builder) => {
     builder.addCase(generateTerrain.pending, (state) => {
       state.loading = true
-      state.error = null
+      state.error = []
     });
     builder.addCase(generateTerrain.fulfilled, (state, action) => {
       state.loading = false
@@ -89,7 +108,7 @@ export const terrainSlice = createSlice({
     });
     builder.addCase(generateTerrain.rejected, (state, action) => {
       state.loading = false
-      state.error = action.error.message ?? 'An error occurred while generating terrain.'
+      action.error.message ?? state.error.push('An error occurred while generating terrain.')
     });
   },
 });
@@ -100,7 +119,11 @@ export const {
   setTerrain,
   setGameState,
   setSimulationState,
-  setHoverTile
+  setHoverTile,
+  setBurningTiles,
+  setAshTiles,
+  setAutoIgniteQuantity,
+  addError
 } = terrainSlice.actions;
 
 export default terrainSlice.reducer;
