@@ -15,7 +15,7 @@ const TerrainConfig = () => {
         title='Width'
         description='the width of the terrain'
         value={width}
-        range={{ min: 10 }}
+        range={{ min: 3 }}
         reduxFunction={setWidth}
         unit='tiles'
       />
@@ -24,7 +24,7 @@ const TerrainConfig = () => {
         title='Height'
         description='the height of the terrain'
         value={height}
-        range={{ min: 10 }}
+        range={{ min: 3 }}
         reduxFunction={setHeight}
         unit='tiles'
       />

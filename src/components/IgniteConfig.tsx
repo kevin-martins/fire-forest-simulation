@@ -40,7 +40,7 @@ const IgniteConfig = () => {
           title="Quantity"
           description="amount of tile that would be ignited"
           value={autoIgniteQuantity}
-          range={{ min: 1, max: Math.round((width * height) / 10) }}
+          range={{ min: 1 }}
           reduxFunction={setAutoIgniteQuantity}
           unit='tiles'
         />
