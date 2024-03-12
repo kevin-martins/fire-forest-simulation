@@ -17,31 +17,38 @@ const TileConfig = () => {
       <InputNumber
         id='temperature'
         title='Temperature'
-        description='temperature value from -20 to 50'
-        value={temperature} reduxFunction={setTemperature}
+        description='temperature value'
+        value={temperature}
+        range={{ min: -20, max: 50 }}
+        reduxFunction={setTemperature}
         unit='°C'
+        error
       />
       <InputNumber
         id='humidity'
         title='Humidity'
-        description='humidity value from 0 to 100%'
+        description='humidity value'
         value={humidity}
+        range={{ min: 0, max: 100 }}
         reduxFunction={setHumidity}
         unit='%'
+        error
       />
       <InputNumber
         id='burning-duration'
         title='Burning Duration'
         description='time required for a burning tile to become ash'
         value={burningDuration}
+        range={{ min: 1, max: 10 }}
         reduxFunction={setBurningDuration}
-        unit='turn'
+        unit='turns'
       />
       <InputNumber
         id='burning-rate'
         title='Burning Rate'
-        description='chance for a tile to get ignite from 0 to 100'
+        description='chance for a tile to get ignite'
         value={burnChance}
+        range={{ min: 1, max: 100 }}
         reduxFunction={setBurnChance}
         unit='%'
       />

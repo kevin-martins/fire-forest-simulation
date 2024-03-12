@@ -7,24 +7,35 @@ type Props = {
   title: string
   description: string
   value: number
+  range: {
+    min: number
+    max: number
+  }
   reduxFunction: (value: number) => PayloadAction<number>
   unit?: string
   step?: number
+  error?: boolean
 }
 
-const InputNumber = ({ id, title, description, value, reduxFunction, unit = '', step = 1 }: Props) => {
-  const [error, setError] = useState<boolean>(false)
+const InputNumber = ({ id, title, description, value, range, reduxFunction, unit = '', error = false }: Props) => {
   const dispatch = useDispatch()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(reduxFunction(Number(event.target.value)))
+    const inputValue = Number(event.target.value)
+    if (inputValue > range.max) {
+      dispatch(reduxFunction(range.max))
+    } else if (inputValue < range.min) {
+      dispatch(reduxFunction(range.min))
+    } else {
+      dispatch(reduxFunction(inputValue))
+    }
   }
 
   return (
     <div>
       <label htmlFor={`${id}-input`} className="block mb-px text-md font-medium text-white">
         {title}:
-        <p id="helper-text-explanation" className="font-normal mt-1 text-sm text-gray-400 block align-top">{description}</p>
+        <p id="helper-text-explanation" className="font-normal mt-1 text-sm text-gray-400 block align-top">{description} from {range.min} to {range.max}{unit}</p>
       </label>
       <div className="relative flex items-center max-w-[8rem]">
         <input
@@ -38,7 +49,7 @@ const InputNumber = ({ id, title, description, value, reduxFunction, unit = '', 
         />
         <span className='absolute z-10 text-slate-100 left-1/2 px-2'>{unit}</span>
       </div>
-      {error && <p id="helper-text-explanation" className="mt-2 text-sm text-red-400">the value is out of bounds</p>}
+      {error && <p id="helper-text-explanation" className="mt-px text-sm text-red-700">{title} useless for now, wait for the next release !</p>}
     </div>
   )
 }

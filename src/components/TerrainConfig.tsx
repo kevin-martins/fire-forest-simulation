@@ -14,14 +14,18 @@ const TerrainConfig = () => {
         id='width'
         title='Width'
         description='the width of the terrain'
-        value={width} reduxFunction={setWidth}
+        value={width}
+        range={{ min: 10, max: 100 }}
+        reduxFunction={setWidth}
         unit='tiles'
       />
       <InputNumber
         id='height'
         title='Height'
         description='the height of the terrain'
-        value={height} reduxFunction={setHeight}
+        value={height}
+        range={{ min: 10, max: 100 }}
+        reduxFunction={setHeight}
         unit='tiles'
       />
       <DropDown />

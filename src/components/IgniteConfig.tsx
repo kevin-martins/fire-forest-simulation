@@ -35,7 +35,15 @@ const IgniteConfig = () => {
     <div className='flex flex-col'>
       <h1 className='text-white text-lg font-medium -translate-x-5'>Ignite Configuration</h1>
       <div className="w-max flex flex-row">
-        <InputNumber id='ignite-quantity' title="Quantity" description="amount of tile that would be ignited" value={autoIgniteQuantity} reduxFunction={setAutoIgniteQuantity} unit='tiles' />
+        <InputNumber
+          id='ignite-quantity'
+          title="Quantity"
+          description="amount of tile that would be ignited"
+          value={autoIgniteQuantity}
+          range={{ min: 1, max: Math.round((width * height) / 10) }}
+          reduxFunction={setAutoIgniteQuantity}
+          unit='tiles'
+        />
         <Button handleClick={handleIgniteTiles} style={{ margin: 'auto 0 0 20px' }}>
           <p>Ignite Tiles</p>
         </Button>
