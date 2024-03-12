@@ -1,10 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import TileConfigProps from '../models/terrainConfig';
 import PlayModeState from '../models/playModeState';
 import GameState from '../models/gameState';
 
 interface InitialState {
-  loading: boolean
   terrain: TileConfigProps[][]
   width: number
   height: number
@@ -24,7 +23,6 @@ const config = {
 
 const initialState: InitialState = {
   ...config,
-  loading: false,
   terrain: [],
   gameState: GameState.Config,
   playMode: PlayModeState.Step,
@@ -34,32 +32,6 @@ const initialState: InitialState = {
   ashTiles: 0,
   autoIgniteQuantity: 20
 };
-
-export const generateTerrain = createAsyncThunk(
-  'terrain/generateTerrain',
-  async (payload: { width: number; height: number, tileConfig: TileConfigProps }) => {
-    const { width, height, tileConfig } = payload
-    const newTerrain: TileConfigProps[][] = []
-    
-    for (let i = 0; i < height; i++) {
-      const row: TileConfigProps[] = []
-      for (let j = 0; j < width; j++) {
-        const config: TileConfigProps = {
-          ...tileConfig,
-          coordinates: {
-            row: i + 1,
-            col: j + 1
-          },
-        }
-        row.push({ ...config })
-      }
-      newTerrain.push(row)
-    }
-    return newTerrain
-  }
-);
-
-
 
 export const terrainSlice = createSlice({
   name: 'terrainConfig',
@@ -96,21 +68,7 @@ export const terrainSlice = createSlice({
     addError(state, action: PayloadAction<string>) {
       state.error.push(action.payload)
     }
-  },
-  extraReducers: (builder) => {
-    builder.addCase(generateTerrain.pending, (state) => {
-      state.loading = true
-      state.error = []
-    });
-    builder.addCase(generateTerrain.fulfilled, (state, action) => {
-      state.loading = false
-      state.terrain = action.payload
-    });
-    builder.addCase(generateTerrain.rejected, (state, action) => {
-      state.loading = false
-      action.error.message ?? state.error.push('An error occurred while generating terrain.')
-    });
-  },
+  }
 });
 
 export const {
