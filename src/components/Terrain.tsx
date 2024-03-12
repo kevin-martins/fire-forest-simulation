@@ -69,13 +69,13 @@ const Tile = (tile: TileConfigProps) => {
             return <HiArrowNarrowUp className='absolute z-10 -top-4 right-1 scale-150 pointer-events-none' />
           } else if (i === 1) {
             // Arrow Down
-            return <HiArrowNarrowDown className='absolute z-10 -bottom-4 left-1 scale-150' />
+            return <HiArrowNarrowDown className='absolute z-10 -bottom-4 left-1 scale-150 pointer-events-none' />
           } else if (i === 2) {
             // Arrow Left
-            return <HiArrowNarrowLeft className='absolute z-10 scale-150 right-6 top-1' />
+            return <HiArrowNarrowLeft className='absolute z-10 scale-150 right-6 top-1 pointer-events-none' />
           } else {
             // Arrow Down
-            return <HiArrowNarrowRight className='absolute z-10 scale-150 left-6 top-1' />
+            return <HiArrowNarrowRight className='absolute z-10 scale-150 left-6 top-1 pointer-events-none' />
           }
         }
       })
@@ -108,7 +108,7 @@ const Tile = (tile: TileConfigProps) => {
       if (tile.state === TileState.Burning) {
         return plainFireIcon
       } else if (tile.state === TileState.Ash) {
-        return <MdOutlineLensBlur className='w-6 h-6 m-auto rounded' />
+        return <MdOutlineLensBlur className='w-6 h-6 m-auto rounded text-slate-200' />
       }
     }
   }

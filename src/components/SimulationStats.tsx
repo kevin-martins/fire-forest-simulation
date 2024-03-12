@@ -22,7 +22,7 @@ const SimulationStats = () => {
         </div>
         <div className='flex gap-1'>
           <div className='my-auto w-5 h-5 rounded bg-gray-600'>
-            <MdOutlineLensBlur className='w-5 h-5 m-auto rounded' />
+            <MdOutlineLensBlur className='w-5 h-5 m-auto rounded text-white' />
           </div>
           <span className='items-center'>{ashTiles} Burned</span>
         </div>
