@@ -1,3 +1,4 @@
+import NotificationProps from "../models/notification";
 import PlayModeState from "../models/playModeState";
 import { TileState } from "../models/terrainConfig";
 
@@ -34,4 +35,9 @@ export const getBackgroundColor = (state: TileState) => {
     case TileState.Burning: return '#ca8a04'
     default: return ''
   }
+}
+
+export const createNotif = (text: string, isError: boolean = false): NotificationProps => {
+  const randomId = Math.round(Math.random() * 10000)
+  return { id: randomId, isError, text }
 }
