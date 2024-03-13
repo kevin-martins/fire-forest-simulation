@@ -35,7 +35,9 @@ const InputNumber = ({ id, title, description, value, range, reduxFunction, unit
     <div>
       <label htmlFor={`${id}-input`} className="block mb-px text-md font-medium text-white">
         {title}:
-        <p id="helper-text-explanation" className="font-normal mt-1 text-sm text-gray-400 block align-top">{description}{range?.max && ` from ${range.min} to ${range.max}${unit}`}</p>
+        <p className="font-normal mt-1 text-sm text-gray-400 block align-top">
+          {description}{range?.max && ` from ${range.min} to ${range.max}${unit}`}
+        </p>
       </label>
       <div className="relative flex items-center max-w-[8rem]">
         <input
@@ -49,7 +51,7 @@ const InputNumber = ({ id, title, description, value, range, reduxFunction, unit
         />
         <span className='absolute z-10 text-slate-100 left-1/2 px-2'>{unit}</span>
       </div>
-      {error && <p id="helper-text-explanation" className="mt-px text-sm text-red-700">{title} useless for now, wait for the next release !</p>}
+      {error && <p className="mt-px text-sm text-red-700">{title} useless for now, wait for the next release !</p>}
     </div>
   )
 }
