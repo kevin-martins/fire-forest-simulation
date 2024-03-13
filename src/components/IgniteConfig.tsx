@@ -26,7 +26,7 @@ const IgniteConfig = () => {
         const data = igniteRandomTiles(width, height, autoIgniteQuantity, terrain)
         dispatch(setTerrain(data))
         dispatch(setBurningTiles(burningTiles + autoIgniteQuantity))
-        dispatch(addNotification(createNotif("Tiles have successfully been ignited")))
+        dispatch(addNotification(createNotif("Tiles has been successfully ignited")))
       }
     } else {
       dispatch(addNotification(createNotif("Can't ignite while running or in end screen", true)))
