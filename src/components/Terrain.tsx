@@ -59,26 +59,27 @@ const Tile = (tile: TileConfigProps) => {
         { row: row, col: col + 1 } //right
       ]
 
-      return neighbors.map((neighbor, i) => {
-        const { row, col } = neighbor
+      return neighbors.reduce((acc: JSX.Element[], curr, i) => {
+        const { row, col } = curr
         if (row >= 0 && row < terrain.length && col >= 0 && col < terrain[row].length
           && terrain[row][col].state === TileState.Initial
         ) {
           if (i === 0) {
             // Arrow Up
-            return <HiArrowNarrowUp className='absolute z-10 -top-4 right-1 scale-150 pointer-events-none' />
+            acc.push(<HiArrowNarrowUp className='absolute z-10 -top-4 right-1 scale-150 pointer-events-none' />)
           } else if (i === 1) {
             // Arrow Down
-            return <HiArrowNarrowDown className='absolute z-10 -bottom-4 left-1 scale-150 pointer-events-none' />
+            acc.push(<HiArrowNarrowDown className='absolute z-10 -bottom-4 left-1 scale-150 pointer-events-none' />)
           } else if (i === 2) {
             // Arrow Left
-            return <HiArrowNarrowLeft className='absolute z-10 scale-150 right-6 top-1 pointer-events-none' />
+            acc.push(<HiArrowNarrowLeft className='absolute z-10 scale-150 right-6 top-1 pointer-events-none' />)
           } else {
             // Arrow Down
-            return <HiArrowNarrowRight className='absolute z-10 scale-150 left-6 top-1 pointer-events-none' />
+            acc.push(<HiArrowNarrowRight className='absolute z-10 scale-150 left-6 top-1 pointer-events-none' />)
           }
         }
-      })
+        return acc
+      }, [])
     }
   }
 
@@ -87,6 +88,7 @@ const Tile = (tile: TileConfigProps) => {
       if (tile.state === TileState.Burning) {
         const updatedTerrain = updateTile(terrain, tile.coordinates, { state: TileState.Initial })
         dispatch(setTerrain(updatedTerrain))
+        dispatch(setBurningTiles(burningTiles - 1))
       } else if (tile.state === TileState.Initial) {
         const updatedTerrain = updateTile(terrain, tile.coordinates, { state: TileState.Burning })
         dispatch(setTerrain(updatedTerrain))
