@@ -78,6 +78,7 @@ const App = () => {
 
   useEffect(() => {
     handleBuild()
+    // eslint-disable-next-line
   }, [])
 
   return (
