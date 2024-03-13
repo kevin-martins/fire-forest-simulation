@@ -7,7 +7,7 @@ import GameState from '../models/gameState'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { setAshTiles,setBurningTiles, setTerrain, setGameState, addNotification } from "../features/terrainSlice";
-import { burnNeighborTiles, handleTerrainGeneration } from "../utils/terrain-config";
+import { updateTerrainToNextStep, handleTerrainGeneration } from "../utils/terrain-config";
 import { useEffect } from "react";
 import PlayModeState from "../models/playModeState";
 import { FaForwardStep } from "react-icons/fa6";
@@ -37,7 +37,7 @@ const App = () => {
   }
 
   const nextSimulationStep = () => {
-    const data = burnNeighborTiles(width, height, terrain)
+    const data = updateTerrainToNextStep(width, height, terrain)
     dispatch(setTerrain(data.terrain))
     dispatch(setBurningTiles(data.burning))
     dispatch(setAshTiles(ashTiles + data.ash))

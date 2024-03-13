@@ -84,16 +84,20 @@ type SimulationProps = {
  ash: number
 }
 
-export const burnNeighborTiles = (
+export const updateTerrainToNextStep = (
   width: number,
   height: number,
   terrain: TileConfigProps[][]
 ): SimulationProps => {
-  let burning = 0;
-  let ash = 0
   const newTerrain: TileConfigProps[][] = []
-  
-  // Set changes on Burning tiles
+  const ash = updateBurningToBurnedAndCount(width, height, terrain, newTerrain)
+  const burning = updateNeighborsToBurningAndCount(width, height, terrain, newTerrain)
+
+  return { terrain: newTerrain, ash, burning }
+}
+
+const updateBurningToBurnedAndCount = (width: number, height: number, terrain: TileConfigProps[][], newTerrain: TileConfigProps[][]): number => {
+  let ash = 0
   for (let i = 0; i < height; i++) {
     const newRow: TileConfigProps[] = []
     for (let j = 0; j < width; j++) {
@@ -103,10 +107,8 @@ export const burnNeighborTiles = (
         newTile.lifetime += 1
         if (newTile.state === TileState.Burning) {
           newTile.burningDuration -= 1
-          burning += 1
           if (newTile.burningDuration <= 0) {
             newTile.state = TileState.Ash
-            burning -= 1
             ash += 1
           }
         }
@@ -115,11 +117,14 @@ export const burnNeighborTiles = (
     }
     newTerrain.push(newRow)
   }
-  // Set burning tiles's Neighbors on fire
+  return ash
+}
+
+const updateNeighborsToBurningAndCount = (width: number, height: number, terrain: TileConfigProps[][], newTerrain: TileConfigProps[][]): number => {
+  let burning = 0
   for (let i = 0; i < height; i++) {
     for (let j = 0; j < width; j++) {
       const currentTile = terrain[i][j]
-      // Neighbors changes
       if (currentTile.state === TileState.Burning) {
         const neighbors = [
           { row: i - 1, col: j },
@@ -127,8 +132,7 @@ export const burnNeighborTiles = (
           { row: i, col: j - 1 },
           { row: i, col: j + 1 }  
         ]
-
-        neighbors.forEach(neighbor => {
+        for (const neighbor of neighbors) {
           const { row, col } = neighbor
           if (row >= 0 && row < terrain.length && col >= 0 && col < terrain[row].length
             && terrain[row][col].state === TileState.Initial && newTerrain[row][col].state === TileState.Initial
@@ -140,9 +144,9 @@ export const burnNeighborTiles = (
             }
             burning += 1
           }
-        })
+        }
       }
     }
   }
-  return { terrain: newTerrain, ash, burning }
+  return burning
 }
