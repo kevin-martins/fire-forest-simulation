@@ -15,10 +15,10 @@ const Button = ({ children, handleClick, style }: Props) => {
         before:absolute before:inset-0
         before:-z-10 before:translate-y-[200%]
         before:scale-[2.5]
-        before:rounded-[100%] before:bg-yellow-600
+        before:rounded-[100%] before:bg-indigo-500
         before:transition-transform before:duration-1000
         before:content-[&quot;&quot;]
-        hover:scale-105 hover:border-yellow-600 hover:text-black
+        hover:scale-105 hover:border-indigo-500 hover:text-black
         hover:before:translate-y-[0%]
         active:scale-100"
       style={{ ...style }}
