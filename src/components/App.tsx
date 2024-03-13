@@ -6,13 +6,15 @@ import Button from "./Button";
 import GameState from '../models/gameState'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
-import { setAshTiles, setBurningTiles, setTerrain, setGameState } from "../features/terrainSlice";
+import { setAshTiles,setBurningTiles, setTerrain, setGameState, addNotification } from "../features/terrainSlice";
 import { burnNeighborTiles, handleTerrainGeneration } from "../utils/terrain-config";
 import { useEffect } from "react";
 import PlayModeState from "../models/playModeState";
 import { FaForwardStep } from "react-icons/fa6";
 import { MdAutorenew } from "react-icons/md";
 import IgniteConfig from "./IgniteConfig";
+import { createNotif } from "../utils/utils";
+import SendNotifications from "./SendNotifications";
 
 const App = () => {
   const {
@@ -34,28 +36,32 @@ const App = () => {
     dispatch(setGameState(GameState.Config))
   }
 
-  const nextSimulationStep = ():boolean => {
-    if (burningTiles !== 0) {
-      const data = burnNeighborTiles(width, height, terrain)
-      dispatch(setTerrain(data.terrain))
-      dispatch(setBurningTiles(data.burning))
-      dispatch(setAshTiles(ashTiles + data.ash))
-      if (data.burning === 0) {
-        dispatch(setGameState(GameState.End))
-      }
-      return true
-    } else {
-      console.log("There is no tile to burn")
-      return false
+  const nextSimulationStep = () => {
+    const data = burnNeighborTiles(width, height, terrain)
+    dispatch(setTerrain(data.terrain))
+    dispatch(setBurningTiles(data.burning))
+    dispatch(setAshTiles(ashTiles + data.ash))
+    if (data.burning === 0) {
+      dispatch(setGameState(GameState.End))
     }
   }
 
   const handleStart = () => {
-    if (gameState === GameState.Config && burningTiles > 0) {
-      nextSimulationStep()
-      dispatch(setGameState(GameState.Running))
-    } else if (gameState === GameState.Running) {
-      nextSimulationStep()
+    if (burningTiles > 0) {
+      if (gameState === GameState.Running) {
+        nextSimulationStep()
+      } else if (gameState === GameState.Config) {
+        nextSimulationStep()
+        dispatch(setGameState(GameState.Running))
+      }
+    } else {
+      if (gameState === GameState.End) {
+        dispatch(addNotification(createNotif("There is no more tile to burn", true)))
+      } else if (gameState === GameState.Running) {
+        dispatch(setGameState(GameState.End))
+      } else {
+        dispatch(addNotification(createNotif("There is no ignited tile in the scene", true)))
+      }
     }
   }
 
@@ -85,6 +91,7 @@ const App = () => {
         </p>
       </header>
       <main className="bg-slate-900">
+        <SendNotifications />
         <div className="container mx-auto flex lg:flex-row flex-col h-full place-items-center">
           <div className="pl-6 w-1/2 ml-auto">
             <GameStateList />

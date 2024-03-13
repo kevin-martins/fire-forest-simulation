@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux"
-import { addError, setAutoIgniteQuantity, setBurningTiles, setTerrain } from "../features/terrainSlice"
+import { addNotification, setAutoIgniteQuantity, setBurningTiles, setTerrain } from "../features/terrainSlice"
 import GameState from "../models/gameState"
 import { igniteRandomTiles } from "../utils/terrain-config"
 import Button from "./Button"
 import InputNumber from "./InputNumber"
 import { RootState } from "../app/store"
+import { createNotif } from "../utils/utils"
 
 const IgniteConfig = () => {
   const {
@@ -20,14 +21,15 @@ const IgniteConfig = () => {
   const handleIgniteTiles = () => {
     if (gameState === GameState.Config) {
       if (autoIgniteQuantity + burningTiles > width * height) {
-        dispatch(addError("There is no tile to ignite"))
+        dispatch(addNotification(createNotif("There is not enough free tiles to ignite", true)))
       } else {
         const data = igniteRandomTiles(width, height, autoIgniteQuantity, terrain)
         dispatch(setTerrain(data))
         dispatch(setBurningTiles(burningTiles + autoIgniteQuantity))
+        dispatch(addNotification(createNotif("Tiles have successfully been ignited")))
       }
     } else {
-      console.log("Can't ignite while runnint or in end")
+      dispatch(addNotification(createNotif("Can't ignite while running or in end screen", true)))
     }
   }
 

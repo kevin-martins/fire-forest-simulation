@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import TileConfigProps from '../models/terrainConfig';
 import PlayModeState from '../models/playModeState';
 import GameState from '../models/gameState';
+import NotificationProps from '../models/notification';
 
 interface InitialState {
   terrain: TileConfigProps[][]
@@ -10,7 +11,7 @@ interface InitialState {
   gameState: GameState
   playMode: PlayModeState
   hoverTile: boolean
-  error: string[]
+  notifications: NotificationProps[]
   burningTiles: number
   ashTiles: number
   autoIgniteQuantity: number
@@ -27,7 +28,7 @@ const initialState: InitialState = {
   gameState: GameState.Config,
   playMode: PlayModeState.Step,
   hoverTile: false,
-  error: [],
+  notifications: [],
   burningTiles: 0,
   ashTiles: 0,
   autoIgniteQuantity: 20
@@ -65,8 +66,11 @@ export const terrainSlice = createSlice({
     setAutoIgniteQuantity(state, action: PayloadAction<number>) {
       state.autoIgniteQuantity = action.payload
     },
-    addError(state, action: PayloadAction<string>) {
-      state.error.push(action.payload)
+    addNotification(state, action: PayloadAction<NotificationProps>) {
+      state.notifications.unshift(action.payload)
+    },
+    removeNotification(state, action: PayloadAction<NotificationProps[]>) {
+      state.notifications = action.payload
     }
   }
 });
@@ -81,7 +85,8 @@ export const {
   setBurningTiles,
   setAshTiles,
   setAutoIgniteQuantity,
-  addError
+  addNotification,
+  removeNotification
 } = terrainSlice.actions;
 
 export default terrainSlice.reducer;
