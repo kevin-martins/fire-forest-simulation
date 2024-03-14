@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Terrain from "./Terrain";
 import TerrainConfig from "./TerrainConfig";
 import TileConfig from "./TileConfig";
@@ -8,12 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { setAshTiles,setBurningTiles, setTerrain, setGameState, addNotification } from "../features/terrainSlice";
 import { updateTerrainToNextStep, handleTerrainGeneration } from "../utils/terrain-modifyer";
-import { useEffect } from "react";
 import PlayModeState from "../models/playModeState";
 import { FaForwardStep } from "react-icons/fa6";
 import { MdAutorenew } from "react-icons/md";
 import IgniteConfig from "./IgniteConfig";
-import { createNotif } from "../utils/utils";
+import { checkConfigChanges, createNotif } from "../utils/utils";
 import SendNotifications from "./SendNotifications";
 
 const App = () => {
@@ -22,18 +22,28 @@ const App = () => {
     height,
     terrain,
     burningTiles,
+    ashTiles,
     gameState,
     playMode
   } = useSelector((state: RootState) => state.terrainConfig)
   const tileConfig = useSelector((state: RootState) => state.tileConfig)
+  const [savePreviousInputs, setSavePreviousInputs] = useState({ width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })
   const dispatch = useDispatch()
 
   const handleBuild = () => {
-    dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
-    dispatch(addNotification(createNotif("The terrain has been successfully rebuild")))
-    dispatch(setBurningTiles(0))
-    dispatch(setAshTiles(0))
-    dispatch(setGameState(GameState.Config))
+    if (checkConfigChanges(savePreviousInputs, { width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })) {
+      dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
+      dispatch(addNotification(createNotif("Changes has been successfully applyed")))
+      setSavePreviousInputs({ width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })
+    } else if ((burningTiles > 0 || ashTiles > 0) && gameState !== GameState.Config) {
+      dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
+      dispatch(addNotification(createNotif("The terrain has been successfully rebuild")))
+      dispatch(setBurningTiles(0))
+      dispatch(setAshTiles(0))
+      dispatch(setGameState(GameState.Config))
+    } else {
+      dispatch(addNotification(createNotif("Nothing has changed", true)))
+    }
   }
 
   const nextSimulationStep = () => {
@@ -77,7 +87,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    handleBuild()
+    dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
     // eslint-disable-next-line
   }, [])
 

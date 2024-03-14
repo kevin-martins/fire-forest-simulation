@@ -37,6 +37,12 @@ export const getBackgroundColor = (state: TileState) => {
   }
 }
 
+export const checkConfigChanges = (savePreviousInputs: any, currentInuts: any) =>  {
+  return Object.keys(savePreviousInputs).some(key => {
+    return (savePreviousInputs as any)[key] !== (currentInuts as any)[key]
+  })
+}
+
 export const createNotif = (text: string, isError: boolean = false): NotificationProps => {
   const randomId: number = Math.round(Math.random() * 10000)
   return { id: randomId, isError, text }
