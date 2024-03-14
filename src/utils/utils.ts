@@ -38,6 +38,8 @@ export const getBackgroundColor = (state: TileState) => {
 }
 
 export const createNotif = (text: string, isError: boolean = false): NotificationProps => {
-  const randomId = Math.round(Math.random() * 10000)
+  const randomId: number = Math.round(Math.random() * 10000)
   return { id: randomId, isError, text }
 }
+
+export const removeNotificationById = (notifications: NotificationProps[], id: number) => notifications.filter((n) => n.id !== id)

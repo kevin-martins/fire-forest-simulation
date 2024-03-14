@@ -6,6 +6,7 @@ import { RootState } from "../app/store";
 import NotificationProps from "../models/notification";
 import { IoAlert, IoCheckmark } from "react-icons/io5";
 import { removeNotification } from "../features/terrainSlice";
+import { removeNotificationById } from "../utils/utils";
 
 const Notification = ({ text, id, isError, removeNotif }: NotificationProps & { removeNotif: Function }) => {
   useEffect(() => {
@@ -25,7 +26,7 @@ const Notification = ({ text, id, isError, removeNotif }: NotificationProps & { 
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="p-2 flex items-start rounded gap-2 text-xs font-medium shadow-lg text-white bg-indigo-500 pointer-events-auto"
     >
-      {isError ? <IoAlert className="mt-0.5 scale-150" /> : <IoCheckmark className="mt-0.5 scale-150" />}
+      {isError ? <IoAlert id='error-icon' className="mt-0.5 scale-150" /> : <IoCheckmark id='valid-icon' className="mt-0.5 scale-150" />}
       <span>{text}</span>
       <button onClick={() => removeNotif(id)} className="ml-auto mt-0.5">
         <FiX />
@@ -39,7 +40,7 @@ const SendNotifications = () => {
   const dispatch = useDispatch()
 
   const removeNotif = (id: number) => {
-    dispatch(removeNotification(notifications.filter((n) => n.id !== id)))
+    dispatch(removeNotification(removeNotificationById(notifications, id)))
   }
 
   return (
