@@ -18,7 +18,7 @@ const GameStateList = () => {
 
   return (
     <div className='mx-auto mb-12'>
-      <div className=''>
+      <div>
         <motion.h1
           variants={titleVariants}
           initial='hidden'
