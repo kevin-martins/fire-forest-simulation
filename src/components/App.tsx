@@ -22,7 +22,6 @@ const App = () => {
     height,
     terrain,
     burningTiles,
-    ashTiles,
     gameState,
     playMode
   } = useSelector((state: RootState) => state.terrainConfig)
@@ -31,6 +30,7 @@ const App = () => {
 
   const handleBuild = () => {
     dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
+    dispatch(addNotification(createNotif("The terrain has been successfully rebuild")))
     dispatch(setBurningTiles(0))
     dispatch(setAshTiles(0))
     dispatch(setGameState(GameState.Config))
@@ -40,7 +40,7 @@ const App = () => {
     const data = updateTerrainToNextStep(width, height, terrain)
     dispatch(setTerrain(data.terrain))
     dispatch(setBurningTiles(data.burning))
-    dispatch(setAshTiles(ashTiles + data.ash))
+    dispatch(setAshTiles(data.ash))
     if (data.burning === 0) {
       dispatch(setGameState(GameState.End))
     }
@@ -60,7 +60,7 @@ const App = () => {
       } else if (gameState === GameState.Running) {
         dispatch(setGameState(GameState.End))
       } else {
-        dispatch(addNotification(createNotif("There is no ignited tile in the scene", true)))
+        dispatch(addNotification(createNotif("There is no burning tile in the scene", true)))
       }
     }
   }

@@ -112,6 +112,8 @@ const updateBurningToBurnedAndCount = (width: number, height: number, terrain: T
             ash += 1
           }
         }
+      } else {
+        ash += 1
       }
       newRow.push(newTile)
     }
