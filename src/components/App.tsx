@@ -33,9 +33,9 @@ const App = () => {
   const handleBuild = () => {
     if (checkConfigChanges(savePreviousInputs, { width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })) {
       dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
-      dispatch(addNotification(createNotif("Changes has been successfully applyed")))
+      dispatch(addNotification(createNotif("Changes has been successfully applied")))
       setSavePreviousInputs({ width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })
-    } else if ((burningTiles > 0 || ashTiles > 0) && gameState !== GameState.Config) {
+    } else if ((burningTiles > 0 || ashTiles > 0)) {
       dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
       dispatch(addNotification(createNotif("The terrain has been successfully rebuild")))
       dispatch(setBurningTiles(0))
