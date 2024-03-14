@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { addNotification, setAutoIgniteQuantity, setBurningTiles, setTerrain } from "../features/terrainSlice"
 import GameState from "../models/gameState"
-import { igniteRandomTiles } from "../utils/terrain-config"
+import { igniteRandomTiles } from "../utils/terrain-modifyer"
 import Button from "./Button"
 import InputNumber from "./InputNumber"
 import { RootState } from "../app/store"

@@ -7,7 +7,7 @@ import GameState from '../models/gameState'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { setAshTiles,setBurningTiles, setTerrain, setGameState, addNotification } from "../features/terrainSlice";
-import { updateTerrainToNextStep, handleTerrainGeneration } from "../utils/terrain-config";
+import { updateTerrainToNextStep, handleTerrainGeneration } from "../utils/terrain-modifyer";
 import { useEffect } from "react";
 import PlayModeState from "../models/playModeState";
 import { FaForwardStep } from "react-icons/fa6";
@@ -68,12 +68,12 @@ const App = () => {
   const startButtonDecoration = () => {
     if (gameState === GameState.Running) {
       if (playMode === PlayModeState.Step) {
-        return <MdAutorenew className="animate-spin" />
+        return <MdAutorenew id='step-icon' className="animate-spin" />
       } else if (playMode === PlayModeState.Auto) {
-        return <FaForwardStep className="animate-bounce" />
+        return <FaForwardStep id='auto-icon' className="animate-bounce" />
       }
     }
-    return <p>Start</p>
+    return <p id='start-text'>Start</p>
   }
 
   useEffect(() => {

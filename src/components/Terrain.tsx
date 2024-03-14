@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import TileConfigProps, { TileState } from '../models/terrainConfig';
 import { AnimatePresence, motion } from 'framer-motion';
-import { updateTile } from '../utils/terrain-config';
+import { updateTile } from '../utils/terrain-modifyer';
 import { getBackgroundColor, tileStateToText } from '../utils/utils';
 import { setBurningTiles, setHoverTile, setTerrain } from '../features/terrainSlice';
 import { BsFire } from "react-icons/bs";
@@ -66,16 +66,16 @@ const Tile = (tile: TileConfigProps) => {
         ) {
           if (i === 0) {
             // Arrow Up
-            acc.push(<HiArrowNarrowUp key={i} className='absolute z-10 -top-4 right-1 scale-150 pointer-events-none' />)
+            acc.push(<HiArrowNarrowUp key={i} id='arrow-up' className='absolute z-10 -top-4 right-1 scale-150 pointer-events-none' />)
           } else if (i === 1) {
             // Arrow Down
-            acc.push(<HiArrowNarrowDown key={i} className='absolute z-10 -bottom-4 left-1 scale-150 pointer-events-none' />)
+            acc.push(<HiArrowNarrowDown key={i} id='arrow-down' className='absolute z-10 -bottom-4 left-1 scale-150 pointer-events-none' />)
           } else if (i === 2) {
             // Arrow Left
-            acc.push(<HiArrowNarrowLeft key={i} className='absolute z-10 scale-150 right-6 top-1 pointer-events-none' />)
+            acc.push(<HiArrowNarrowLeft key={i} id='arrow-left' className='absolute z-10 scale-150 right-6 top-1 pointer-events-none' />)
           } else {
-            // Arrow Down
-            acc.push(<HiArrowNarrowRight key={i} className='absolute z-10 scale-150 left-6 top-1 pointer-events-none' />)
+            // Arrow Right
+            acc.push(<HiArrowNarrowRight key={i} id='arrow-right' className='absolute z-10 scale-150 left-6 top-1 pointer-events-none' />)
           }
         }
         return acc
@@ -98,8 +98,8 @@ const Tile = (tile: TileConfigProps) => {
   }
 
   const tileIcon = () => {
-    const fadeFireIcon = <BsFire className='w-6 h-6 m-auto text-red-600/50 animate-bounce' />
-    const plainFireIcon = <BsFire className='w-6 h-6 m-auto text-red-600 animate-bounce relative z-30' />
+    const fadeFireIcon = <BsFire id='fade-burning-icon' className='w-6 h-6 m-auto text-red-600/50 animate-bounce' />
+    const plainFireIcon = <BsFire id='burning-icon' className='w-6 h-6 m-auto text-red-600 animate-bounce relative z-30' />
     if (gameState === GameState.Config) {
       if (!isHovered && tile.state === TileState.Burning) {
         return plainFireIcon
@@ -110,13 +110,13 @@ const Tile = (tile: TileConfigProps) => {
       if (tile.state === TileState.Burning) {
         return plainFireIcon
       } else if (tile.state === TileState.Ash) {
-        return <MdOutlineLensBlur className='w-6 h-6 m-auto rounded text-slate-200' />
+        return <MdOutlineLensBlur id='ash-icon' className='w-6 h-6 m-auto rounded text-slate-200' />
       }
     }
   }
 
   return (
-    <div className='relative'>
+    <div id='tile' className='relative'>
       <button
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
