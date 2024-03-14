@@ -15,6 +15,7 @@ const Notification = ({ text, id, isError, removeNotif }: NotificationProps & { 
     }, 5000)
 
     return () => clearTimeout(timeoutRef)
+    // eslint-disable-next-line
   }, [])
 
   return (
