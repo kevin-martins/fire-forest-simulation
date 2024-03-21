@@ -39,7 +39,7 @@ export const handleTerrainGeneration = (
 
 export const updateTile = (
   terrain: TileConfigProps[][], 
-  coordinates: { row: number, col: number }, 
+  coordinates: { row: number, col: number },
   newProps: Partial<TileConfigProps>
 ): TileConfigProps[][] => {
   const newArray = terrain.map((row) => [...row])
@@ -132,7 +132,7 @@ const updateNeighborsToBurningAndCount = (width: number, height: number, terrain
           { row: i - 1, col: j },
           { row: i + 1, col: j },
           { row: i, col: j - 1 },
-          { row: i, col: j + 1 }  
+          { row: i, col: j + 1 }
         ]
         for (const neighbor of neighbors) {
           const { row, col } = neighbor
