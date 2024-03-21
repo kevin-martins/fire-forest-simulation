@@ -27,14 +27,30 @@ const App = () => {
     playMode
   } = useSelector((state: RootState) => state.terrainConfig)
   const tileConfig = useSelector((state: RootState) => state.tileConfig)
-  const [savePreviousInputs, setSavePreviousInputs] = useState({ width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })
+  const [savePreviousInputs, setSavePreviousInputs] = useState({
+    width,
+    height,
+    temperature: tileConfig.temperature,
+    humidity: tileConfig.humidity,
+    burningDuration: tileConfig.burningDuration,
+    burnChance: tileConfig.burnChance
+  })
   const dispatch = useDispatch()
 
   const handleBuild = () => {
-    if (checkConfigChanges(savePreviousInputs, { width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })) {
+    const newConfig = {
+      width,
+      height,
+      temperature: tileConfig.temperature,
+      humidity: tileConfig.humidity,
+      burningDuration: tileConfig.burningDuration,
+      burnChance: tileConfig.burnChance
+    }
+    if (checkConfigChanges(savePreviousInputs, newConfig)) {
       dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
       dispatch(addNotification(createNotif("Changes has been successfully applied")))
-      setSavePreviousInputs({ width, height, temperature: tileConfig.temperature, humidity: tileConfig.humidity, burningDuration: tileConfig.burningDuration, burnChance: tileConfig.burnChance })
+      setSavePreviousInputs(newConfig)
+      dispatch(setGameState(GameState.Config))
     } else if ((burningTiles > 0 || ashTiles > 0)) {
       dispatch(setTerrain(handleTerrainGeneration(width, height, tileConfig)))
       dispatch(addNotification(createNotif("The terrain has been successfully rebuild")))
@@ -42,7 +58,7 @@ const App = () => {
       dispatch(setAshTiles(0))
       dispatch(setGameState(GameState.Config))
     } else {
-      dispatch(addNotification(createNotif("Nothing has changed", true)))
+      dispatch(addNotification(createNotif("Nothing has been changed", true)))
     }
   }
 
