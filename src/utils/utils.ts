@@ -2,7 +2,6 @@ import NotificationProps from "../models/notification";
 import PlayModeState from "../models/playModeState";
 import { TileState } from "../models/terrainConfig";
 
-
 export const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 }
@@ -12,18 +11,18 @@ export const randomNumberRange = (min: number, max: number): number => {
 }
 
 export const tileStateToText = (state: TileState) => {
-  switch (true) {
-    case state === TileState.Initial: return 'Initial'
-    case state === TileState.Burning: return 'Burning'
-    case state === TileState.Ash: return 'Burned'
+  switch (state) {
+    case TileState.Initial: return 'Initial'
+    case TileState.Burning: return 'Burning'
+    case TileState.Ash: return 'Burned'
     default: return 'None'
   }
 }
 
 export const simulationStateToText = (state: PlayModeState) => {
-  switch (true) {
-    case state === PlayModeState.Auto: return 'Auto'
-    case state === PlayModeState.Step: return 'Step by step'
+  switch (state) {
+    case PlayModeState.Auto: return 'Auto'
+    case PlayModeState.Step: return 'Step by step'
     default: return 'None'
   }
 }

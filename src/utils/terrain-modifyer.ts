@@ -76,7 +76,7 @@ export const igniteRandomTiles = (
   return newArray
 }
 
-const shouldCatchFire = (burningChance: number) => Math.random() < (burningChance / 100);
+const shouldCatchFire = (burningChance: number) => Math.random() < (burningChance / 100)
 
 type SimulationProps = {
  terrain: TileConfigProps[][]
